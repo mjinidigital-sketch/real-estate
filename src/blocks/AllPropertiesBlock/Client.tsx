@@ -1,6 +1,7 @@
 'use client'
 
-import React, { useState, useMemo } from 'react'
+import React, { useState, useMemo, useEffect, Suspense } from 'react'
+import { useSearchParams } from 'next/navigation'
 
 import { PropertyCollectionArchive } from '@/components/PropertyCollectionArchive'
 import { HeroSearchFilter, FilterState } from '@/components/HeroSearchFilter'
@@ -16,12 +17,13 @@ import {
 
 export type SortOption = 'newest' | 'price-asc' | 'price-desc' | 'title-asc' | 'title-desc'
 
-export const AllPropertiesBlockClient: React.FC<{
+const AllPropertiesBlockContent: React.FC<{
   properties: PropertyCardData[]
   itemsPerPage: number
   enableFilters: boolean
   enableSorting: boolean
 }> = ({ properties: initialProperties, itemsPerPage, enableFilters, enableSorting }) => {
+  const searchParams = useSearchParams()
   const [filters, setFilters] = useState<FilterState>({
     keyword: '',
     dealType: '',
@@ -31,6 +33,18 @@ export const AllPropertiesBlockClient: React.FC<{
   })
   const [sortOption, setSortOption] = useState<SortOption>('newest')
   const [currentPage, setCurrentPage] = useState(1)
+
+  // Initialize filters from URL search params
+  useEffect(() => {
+    const initialFilters: FilterState = {
+      keyword: searchParams.get('keyword') || '',
+      dealType: searchParams.get('dealType') || '',
+      propertyType: searchParams.get('propertyType') || '',
+      location: searchParams.get('location') || '',
+      amenity: searchParams.get('amenity') || '',
+    }
+    setFilters(initialFilters)
+  }, [searchParams])
 
   // Filter properties
   const filteredProperties = useMemo(() => {
@@ -42,8 +56,8 @@ export const AllPropertiesBlockClient: React.FC<{
 
       const matchDealType =
         !filters.dealType ||
-        (filters.dealType === 'sell' && property.status === 'for_sale') ||
-        (filters.dealType === 'rent' && property.status === 'for_rent')
+        (filters.dealType === 'sell' && (property.status === 'for_sale' || property.status === 'sell')) ||
+        (filters.dealType === 'rent' && (property.status === 'for_rent' || property.status === 'rent'))
 
       const matchPropertyType =
         !filters.propertyType ||
@@ -58,9 +72,10 @@ export const AllPropertiesBlockClient: React.FC<{
 
       const matchAmenity =
         !filters.amenity ||
-        property.features?.some((feature) =>
-          feature.feature?.toLowerCase().includes(filters.amenity.toLowerCase()),
-        )
+        property.features?.some((feature) => {
+          const featureText = typeof feature === 'string' ? feature : (feature as any).feature
+          return featureText && featureText.toLowerCase().includes(filters.amenity.toLowerCase())
+        })
 
       return matchKeyword && matchDealType && matchPropertyType && matchLocation && matchAmenity
     })
@@ -247,5 +262,23 @@ export const AllPropertiesBlockClient: React.FC<{
         </div>
       )}
     </div>
+  )
+}
+
+export const AllPropertiesBlockClient: React.FC<{
+  properties: PropertyCardData[]
+  itemsPerPage: number
+  enableFilters: boolean
+  enableSorting: boolean
+}> = ({ properties, itemsPerPage, enableFilters, enableSorting }) => {
+  return (
+    <Suspense fallback={<div className="container py-8">Loading properties...</div>}>
+      <AllPropertiesBlockContent
+        properties={properties}
+        itemsPerPage={itemsPerPage}
+        enableFilters={enableFilters}
+        enableSorting={enableSorting}
+      />
+    </Suspense>
   )
 }

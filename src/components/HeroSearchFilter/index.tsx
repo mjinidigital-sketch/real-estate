@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import {
@@ -22,6 +23,7 @@ export interface FilterState {
 export const HeroSearchFilter: React.FC<{
   onFilterChange?: (filters: FilterState) => void
 }> = ({ onFilterChange }) => {
+  const router = useRouter()
   const [filters, setFilters] = useState<FilterState>({
     keyword: '',
     dealType: '',
@@ -34,6 +36,19 @@ export const HeroSearchFilter: React.FC<{
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     setHasSearched(true)
+
+    // Build query parameters
+    const params = new URLSearchParams()
+    if (filters.keyword) params.append('keyword', filters.keyword)
+    if (filters.dealType) params.append('dealType', filters.dealType)
+    if (filters.propertyType) params.append('propertyType', filters.propertyType)
+    if (filters.location) params.append('location', filters.location)
+    if (filters.amenity) params.append('amenity', filters.amenity)
+
+    // Navigate to properties page with filters
+    const queryString = params.toString()
+    router.push(`/properties${queryString ? `?${queryString}` : ''}`)
+
     if (onFilterChange) {
       onFilterChange(filters)
     }
@@ -183,28 +198,28 @@ export const HeroSearchFilter: React.FC<{
                   Location
                 </SelectItem>
                 <SelectItem
-                  value="new york"
+                  value="nairobi"
                   className="rounded-none font-semibold text-slate-700 focus:bg-accent focus:text-white"
                 >
-                  New York
+                  Nairobi
                 </SelectItem>
                 <SelectItem
-                  value="los angeles"
+                  value="mombasa"
                   className="rounded-none font-semibold text-slate-700 focus:bg-accent focus:text-white"
                 >
-                  Los Angeles
+                  Mombasa
                 </SelectItem>
                 <SelectItem
-                  value="chicago"
+                  value="kisumu"
                   className="rounded-none font-semibold text-slate-700 focus:bg-accent focus:text-white"
                 >
-                  Chicago
+                  Kisumu
                 </SelectItem>
                 <SelectItem
-                  value="miami"
+                  value="nakuru"
                   className="rounded-none font-semibold text-slate-700 focus:bg-accent focus:text-white"
                 >
-                  Miami
+                  Nakuru
                 </SelectItem>
               </SelectContent>
             </Select>
