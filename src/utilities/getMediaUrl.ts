@@ -7,9 +7,17 @@
  * Local paths (e.g. `/api/media/file/image.webp`) are kept relative so
  * Next.js image optimization treats them as local rather than fetching
  * through `remotePatterns`, which blocks private IPs since Next.js 16.
+ *
+ * External URLs (e.g. Vercel Blob) skip cache tags to avoid 400 errors
+ * with Next.js Image optimization.
  */
 export const getMediaUrl = (url: string | null | undefined, cacheTag?: string | null): string => {
   if (!url) return ''
+
+  // Don't add cache tags for external URLs (Vercel Blob, etc.)
+  if (url.startsWith('http://') || url.startsWith('https://')) {
+    return url
+  }
 
   if (cacheTag && cacheTag !== '') {
     cacheTag = encodeURIComponent(cacheTag)

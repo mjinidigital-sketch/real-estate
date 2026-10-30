@@ -1,6 +1,6 @@
 import { Client } from 'pg'
 
-console.log('=== Direct Database URL Update ===\n')
+console.log('=== Clean Database URLs (Remove Query Params) ===\n')
 
 const DATABASE_URL = process.env.DATABASE_URL
 const BLOB_BASE_URL = 'https://mqppc7vuj2sg96oz.public.blob.vercel-storage.com/'
@@ -38,11 +38,12 @@ async function updateUrls() {
         continue
       }
 
-      const blobUrl = `${BLOB_BASE_URL}${filename}`
+      // Clean URL - remove any query parameters
+      const cleanBlobUrl = `${BLOB_BASE_URL}${filename}`
 
-      // Check if already has Blob URL
-      if (url === blobUrl) {
-        console.log(`Skipping ${filename} - already has Blob URL`)
+      // Check if already has clean Blob URL
+      if (url === cleanBlobUrl) {
+        console.log(`Skipping ${filename} - already has clean Blob URL`)
         skipCount++
         continue
       }
@@ -50,19 +51,19 @@ async function updateUrls() {
       // Update the URL
       await client.query(
         'UPDATE media SET url = $1 WHERE id = $2',
-        [blobUrl, id]
+        [cleanBlobUrl, id]
       )
 
       console.log(`✓ Updated ${filename}`)
       console.log(`  Old: ${url}`)
-      console.log(`  New: ${blobUrl}`)
+      console.log(`  New: ${cleanBlobUrl}`)
       updateCount++
     }
 
     console.log(`\n=== Summary ===`)
     console.log(`Updated: ${updateCount}`)
     console.log(`Skipped: ${skipCount}`)
-    console.log('\nAll media URLs now point to Vercel Blob!')
+    console.log('\nAll media URLs cleaned and pointing to Vercel Blob!')
 
   } catch (error) {
     console.error('Error:', error)

@@ -27,6 +27,11 @@ const nextConfig: NextConfig = {
         protocol: 'https',
         hostname: 'images.unsplash.com',
       },
+      {
+        protocol: 'https',
+        hostname: 'mqppc7vuj2sg96oz.public.blob.vercel-storage.com',
+        pathname: '/**',
+      },
       ...[NEXT_PUBLIC_SERVER_URL /* 'https://example.com' */].map((item) => {
         const url = new URL(item)
 
@@ -36,6 +41,7 @@ const nextConfig: NextConfig = {
         }
       }),
     ],
+    unoptimized: false,
   },
   webpack: (webpackConfig) => {
     webpackConfig.resolve.extensionAlias = {
