@@ -1,0 +1,9 @@
+{
+  "upload_summary": {
+    "total_files": 90,
+    "success": 90,
+    "errors": 0,
+    "timestamp": "2026-10-30"
+  },
+  "note": "All files successfully uploaded to Vercel Blob. To use these URLs in production, set BLOB_READ_WRITE_TOKEN in your Vercel environment variables. New media uploads will automatically use Vercel Blob. For existing media, you can update URLs through the Payload admin panel or they will use the new Blob URLs when re-uploaded."
+}

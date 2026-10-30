@@ -2,7 +2,6 @@ import { sharpTransformer } from '@payloadcms/transformer-sharp'
 import path from 'path'
 import { buildConfig, PayloadRequest } from 'payload'
 import { fileURLToPath } from 'url'
-
 import { Categories } from './collections/Categories'
 import { Media, mediaSharpOptions } from './collections/Media'
 import { Pages } from './collections/Pages'

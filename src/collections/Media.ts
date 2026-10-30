@@ -41,10 +41,29 @@ export const Media: CollectionConfig = {
     },
   ],
   upload: {
-    // Upload to the public/media directory in Next.js making them publicly accessible even outside of Payload
+    // Use local storage
     staticDir: path.resolve(dirname, '../../public/media'),
     adminThumbnail: 'thumbnail',
     filesRequiredOnCreate: false,
+  },
+  hooks: {
+    beforeDelete: [
+      async ({ req, id }) => {
+        // Delete from Vercel Blob when media is deleted
+        try {
+          const media = await req.payload.findByID({
+            collection: 'media',
+            id,
+          })
+          if (media && media.url && media.url.startsWith('https://')) {
+            const { del } = await import('@vercel/blob')
+            await del(media.url)
+          }
+        } catch (error: unknown) {
+          console.error('Error deleting from Vercel Blob:', error)
+        }
+      },
+    ],
   },
 }
 
