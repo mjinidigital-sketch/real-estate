@@ -1,0 +1,32 @@
+import type { Config } from '@/payload-types'
+
+import configPromise from '@payload-config'
+import { type DataFromGlobalSlug, getPayload } from 'payload'
+import { unstable_cache } from 'next/cache'
+
+type Global = keyof Config['globals']
+
+async function getGlobal<T extends Global>(slug: T, depth = 0): Promise<DataFromGlobalSlug<T>> {
+  const payload = await getPayload({ config: configPromise })
+
+  try {
+    const global = await payload.findGlobal({
+      slug,
+      depth,
+    })
+
+    return global
+  } catch (error) {
+    // Handle database schema errors gracefully during build
+    console.warn(`Failed to fetch global "${slug}":`, error)
+    return {} as DataFromGlobalSlug<T>
+  }
+}
+
+/**
+ * Returns a unstable_cache function mapped with the cache tag for the slug
+ */
+export const getCachedGlobal = <T extends Global>(slug: T, depth = 0) =>
+  unstable_cache(async () => getGlobal<T>(slug, depth), [slug], {
+    tags: [`global_${slug}`],
+  })

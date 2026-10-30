@@ -1,0 +1,222 @@
+import { sharpTransformer } from '@payloadcms/transformer-sharp'
+import path from 'path'
+import { buildConfig, PayloadRequest } from 'payload'
+import { fileURLToPath } from 'url'
+
+import { Categories } from './collections/Categories'
+import { Media, mediaSharpOptions } from './collections/Media'
+import { Pages } from './collections/Pages'
+import { Posts } from './collections/Posts'
+// Temporarily disabled due to PostGIS table permissions issue
+import { Properties } from './collections/Properties'
+import { PropertyCategories } from './collections/PropertyCategories'
+import { Users } from './collections/Users'
+import { plugins } from './plugins'
+import { defaultLexical } from '@/fields/defaultLexical'
+import { getServerSideURL } from './utilities/getURL'
+import { postgresAdapter } from '@payloadcms/db-postgres'
+import { Footer } from './Footer/config'
+import { Header } from './Header/config'
+
+const filename = fileURLToPath(import.meta.url)
+const dirname = path.dirname(filename)
+
+export default buildConfig({
+  admin: {
+    dashboard: {
+      defaultLayout: [
+        {
+          widgetSlug: 'studio-welcome',
+          width: 'full',
+        },
+        {
+          widgetSlug: 'recent-content',
+          width: 'full',
+        },
+        {
+          widgetSlug: 'editorial-focus',
+          width: 'medium',
+        },
+        {
+          widgetSlug: 'forms-inbox',
+          width: 'medium',
+        },
+        {
+          widgetSlug: 'seo-health',
+          width: 'medium',
+        },
+        {
+          widgetSlug: 'recent-media',
+          width: 'medium',
+        },
+        {
+          widgetSlug: 'collection-shortcuts',
+          width: 'medium',
+        },
+      ],
+      widgets: [
+        {
+          slug: 'studio-welcome',
+          Component: '@/components/ContentStudioDashboard#StudioWelcomeWidget',
+          label: 'Studio welcome',
+          minWidth: 'full',
+          maxWidth: 'full',
+        },
+        {
+          slug: 'content-overview',
+          Component: '@/components/ContentStudioDashboard#ContentOverviewWidget',
+          label: 'Content overview',
+          minWidth: 'large',
+          maxWidth: 'full',
+        },
+        {
+          slug: 'recent-content',
+          Component: '@/components/ContentStudioDashboard#RecentContentWidget',
+          label: 'Recent content',
+          minWidth: 'medium',
+          maxWidth: 'full',
+        },
+        {
+          slug: 'recent-media',
+          Component: '@/components/ContentStudioDashboard#RecentMediaWidget',
+          label: 'Recent media',
+          minWidth: 'medium',
+          maxWidth: 'full',
+        },
+        {
+          slug: 'editorial-focus',
+          Component: '@/components/ContentStudioDashboard#EditorialFocusWidget',
+          label: 'Editorial focus',
+          minWidth: 'small',
+          maxWidth: 'large',
+        },
+        {
+          slug: 'forms-inbox',
+          Component: '@/components/ContentStudioDashboard#FormsInboxWidget',
+          label: 'Forms inbox',
+          minWidth: 'small',
+          maxWidth: 'large',
+        },
+        {
+          slug: 'seo-health',
+          Component: '@/components/ContentStudioDashboard#SEOHealthWidget',
+          label: 'SEO health',
+          minWidth: 'small',
+          maxWidth: 'large',
+        },
+        {
+          slug: 'collection-shortcuts',
+          Component: '@/components/ContentStudioDashboard#CollectionShortcutsWidget',
+          label: 'Collection shortcuts',
+          minWidth: 'small',
+          maxWidth: 'full',
+        },
+      ],
+    },
+    components: {
+      // The `BeforeLogin` component renders a message that you see while logging into your admin panel.
+      // Feel free to delete this at any time. Simply remove the line below.
+      beforeLogin: ['@/components/BeforeLogin'],
+      views: {
+        uiLab: {
+          Component: '@/components/UILab',
+          meta: {
+            description: 'Explore the Payload v4 UI components and semantic design tokens.',
+            title: 'UI Lab',
+          },
+          path: '/ui-lab',
+        },
+      },
+    },
+    importMap: {
+      baseDir: path.resolve(dirname),
+    },
+    user: Users.slug,
+    livePreview: {
+      breakpoints: [
+        {
+          label: 'Mobile',
+          name: 'mobile',
+          width: 375,
+          height: 667,
+        },
+        {
+          label: 'Tablet',
+          name: 'tablet',
+          width: 768,
+          height: 1024,
+        },
+        {
+          label: 'Desktop',
+          name: 'desktop',
+          width: 1440,
+          height: 900,
+        },
+      ],
+    },
+  },
+  // This config helps us configure global or default features that the other editors can inherit
+  editor: defaultLexical,
+  db: postgresAdapter({
+    // Postgres-specific arguments go here.
+    // `pool` is required.
+    pool: {
+      connectionString: process.env.DATABASE_URL,
+      ssl: {
+        rejectUnauthorized: false,
+      },
+    },
+  }),
+  collections: [
+    {
+      slug: 'folders',
+      folders: true,
+      admin: {
+        useAsTitle: 'name',
+      },
+      fields: [
+        {
+          name: 'name',
+          type: 'text',
+          required: true,
+          label: 'Folder Name',
+        },
+      ],
+    },
+    Pages,
+    Posts,
+    Properties, // Temporarily disabled due to PostGIS table permissions
+    Media,
+    Categories,
+    PropertyCategories, // Temporarily disabled due to PostGIS table permissions
+    Users,
+  ],
+  cors: [getServerSideURL()].filter(Boolean),
+  globals: [Header, Footer],
+  plugins,
+  secret: process.env.PAYLOAD_SECRET,
+  typescript: {
+    outputFile: path.resolve(dirname, 'payload-types.ts'),
+  },
+  upload: {
+    transformers: [sharpTransformer({ collections: { media: mediaSharpOptions } })],
+  },
+  jobs: {
+    access: {
+      run: ({ req }: { req: PayloadRequest }): boolean => {
+        // Allow logged in users to execute this endpoint (default)
+        if (req.user) return true
+
+        const secret = process.env.CRON_SECRET
+        if (!secret) return false
+
+        // If there is no logged in user, then check
+        // for the Vercel Cron secret to be present as an
+        // Authorization header:
+        const authHeader = req.headers.get('authorization')
+        return authHeader === `Bearer ${secret}`
+      },
+    },
+    tasks: [],
+  },
+})

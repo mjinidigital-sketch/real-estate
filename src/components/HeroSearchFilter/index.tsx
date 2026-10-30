@@ -1,0 +1,277 @@
+'use client'
+
+import React, { useState } from 'react'
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+
+export interface FilterState {
+  keyword: string
+  dealType: string
+  propertyType: string
+  location: string
+  amenity: string
+}
+
+export const HeroSearchFilter: React.FC<{
+  onFilterChange?: (filters: FilterState) => void
+}> = ({ onFilterChange }) => {
+  const [filters, setFilters] = useState<FilterState>({
+    keyword: '',
+    dealType: '',
+    propertyType: '',
+    location: '',
+    amenity: '',
+  })
+  const [hasSearched, setHasSearched] = useState(false)
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    setHasSearched(true)
+    if (onFilterChange) {
+      onFilterChange(filters)
+    }
+  }
+
+  const handleReset = () => {
+    const resetFilters = {
+      keyword: '',
+      dealType: '',
+      propertyType: '',
+      location: '',
+      amenity: '',
+    }
+    setFilters(resetFilters)
+    setHasSearched(false)
+    if (onFilterChange) {
+      onFilterChange(resetFilters)
+    }
+  }
+
+  const handleSelectChange = (field: keyof FilterState, value: string) => {
+    const newFilters = {
+      ...filters,
+      [field]: value === 'all' ? '' : value,
+    }
+    setFilters(newFilters)
+    if (onFilterChange) {
+      onFilterChange(newFilters)
+    }
+  }
+
+  return (
+    <div className="relative w-full">
+      {/* Outer Card Wrapper - Kept clean and elegant with subtle light border */}
+      <div className="mx-auto max-w-6xl rounded-none border border-slate-300 bg-white p-4 shadow-xl md:p-5">
+        <form
+          onSubmit={handleSubmit}
+          className="grid grid-cols-2 gap-x-4 gap-y-3 md:grid-cols-5 lg:grid-cols-6 items-center"
+        >
+          {/* Field 1: Keywords */}
+          <div className="flex flex-col gap-1.5 col-span-2 md:col-span-1 px-1 group">
+            <Input
+              type="text"
+              value={filters.keyword}
+              onChange={(e) => {
+                const newFilters = { ...filters, keyword: e.target.value }
+                setFilters(newFilters)
+                if (onFilterChange) {
+                  onFilterChange(newFilters)
+                }
+              }}
+              placeholder="Enter keywords"
+              className="w-full bg-transparent border-b border-transparent hover:border-primary focus-visible:border-primary text-sm font-semibold text-primary placeholder:text-slate-400 focus-visible:ring-0 focus-visible:ring-offset-0 h-10 px-0 rounded-none shadow-none transition-colors duration-150"
+            />
+          </div>
+
+          {/* Field 2: Deal Strategy Selector */}
+          <div className="flex flex-col gap-1.5 border-l border-slate-300 px-2">
+            <Select
+              value={filters.dealType || 'all'}
+              onValueChange={(val) => handleSelectChange('dealType', val)}
+            >
+              <SelectTrigger className="w-full bg-transparent border-none text-sm font-bold text-slate-700 hover:text-primary data-[state=open]:text-primary focus:ring-0 focus:ring-offset-0 h-10 px-1 rounded-none shadow-none [&>svg]:text-slate-400 [&>svg]:data-[state=open]:text-primary transition-colors duration-150">
+                <SelectValue placeholder="Sell or Rent" />
+              </SelectTrigger>
+              <SelectContent className="rounded-none border border-slate-200">
+                <SelectItem
+                  value="all"
+                  className="rounded-none font-semibold text-slate-700 focus:bg-primary focus:text-white"
+                >
+                  Sell or Rent
+                </SelectItem>
+                <SelectItem
+                  value="sell"
+                  className="rounded-none font-semibold text-slate-700 focus:bg-primary focus:text-white"
+                >
+                  For Sale
+                </SelectItem>
+                <SelectItem
+                  value="rent"
+                  className="rounded-none font-semibold text-slate-700 focus:bg-primary focus:text-white"
+                >
+                  To Rent
+                </SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Field 3: Structural Layout Selector */}
+          <div className="flex flex-col gap-1.5 border-l border-slate-300 px-2">
+            <Select
+              value={filters.propertyType || 'all'}
+              onValueChange={(val) => handleSelectChange('propertyType', val)}
+            >
+              <SelectTrigger className="w-full bg-transparent border-none text-sm font-bold text-slate-700 hover:text-primary data-[state=open]:text-primary focus:ring-0 focus:ring-offset-0 h-10 px-1 rounded-none shadow-none [&>svg]:text-slate-400 [&>svg]:data-[state=open]:text-primary transition-colors duration-150">
+                <SelectValue placeholder="Property Type" />
+              </SelectTrigger>
+              <SelectContent className="rounded-none border border-slate-200">
+                <SelectItem
+                  value="all"
+                  className="rounded-none font-semibold text-slate-700 focus:bg-primary focus:text-white"
+                >
+                  Property Type
+                </SelectItem>
+                <SelectItem
+                  value="apartment"
+                  className="rounded-none font-semibold text-slate-700 focus:bg-primary focus:text-white"
+                >
+                  Apartment
+                </SelectItem>
+                <SelectItem
+                  value="townhome"
+                  className="rounded-none font-semibold text-slate-700 focus:bg-primary focus:text-white"
+                >
+                  Townhome
+                </SelectItem>
+                <SelectItem
+                  value="bungalow"
+                  className="rounded-none font-semibold text-slate-700 focus:bg-primary focus:text-white"
+                >
+                  Bungalow
+                </SelectItem>
+                <SelectItem
+                  value="villa"
+                  className="rounded-none font-semibold text-slate-700 focus:bg-primary focus:text-white"
+                >
+                  Luxury Villa
+                </SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Field 4: Location Matrix Selector */}
+          <div className="flex flex-col gap-1.5 border-l border-slate-300 px-2">
+            <Select
+              value={filters.location || 'all'}
+              onValueChange={(val) => handleSelectChange('location', val)}
+            >
+              <SelectTrigger className="w-full bg-transparent border-none text-sm font-bold text-slate-700 hover:text-accent data-[state=open]:text-accent focus:ring-0 focus:ring-offset-0 h-10 px-1 rounded-none shadow-none [&>svg]:text-slate-400 [&>svg]:data-[state=open]:text-accent transition-colors duration-150">
+                <SelectValue placeholder="Location" />
+              </SelectTrigger>
+              <SelectContent className="rounded-none border border-slate-200">
+                <SelectItem
+                  value="all"
+                  className="rounded-none font-semibold text-slate-700 focus:bg-accent focus:text-white"
+                >
+                  Location
+                </SelectItem>
+                <SelectItem
+                  value="new york"
+                  className="rounded-none font-semibold text-slate-700 focus:bg-accent focus:text-white"
+                >
+                  New York
+                </SelectItem>
+                <SelectItem
+                  value="los angeles"
+                  className="rounded-none font-semibold text-slate-700 focus:bg-accent focus:text-white"
+                >
+                  Los Angeles
+                </SelectItem>
+                <SelectItem
+                  value="chicago"
+                  className="rounded-none font-semibold text-slate-700 focus:bg-accent focus:text-white"
+                >
+                  Chicago
+                </SelectItem>
+                <SelectItem
+                  value="miami"
+                  className="rounded-none font-semibold text-slate-700 focus:bg-accent focus:text-white"
+                >
+                  Miami
+                </SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Field 5: Internal Amenities Selector */}
+          <div className="flex flex-col gap-1.5 border-l border-slate-300 px-2">
+            <Select
+              value={filters.amenity || 'all'}
+              onValueChange={(val) => handleSelectChange('amenity', val)}
+            >
+              <SelectTrigger className="w-full bg-transparent border-none text-sm font-bold text-slate-700 hover:text-primary data-[state=open]:text-primary focus:ring-0 focus:ring-offset-0 h-10 px-1 rounded-none shadow-none [&>svg]:text-slate-400 [&>svg]:data-[state=open]:text-primary transition-colors duration-150">
+                <SelectValue placeholder="Amenities" />
+              </SelectTrigger>
+              <SelectContent className="rounded-none border border-slate-200">
+                <SelectItem
+                  value="all"
+                  className="rounded-none font-semibold text-slate-700 focus:bg-primary focus:text-white"
+                >
+                  Amenities
+                </SelectItem>
+                <SelectItem
+                  value="pool"
+                  className="rounded-none font-semibold text-slate-700 focus:bg-primary focus:text-white"
+                >
+                  Pool
+                </SelectItem>
+                <SelectItem
+                  value="garden"
+                  className="rounded-none font-semibold text-slate-700 focus:bg-primary focus:text-white"
+                >
+                  Garden
+                </SelectItem>
+                <SelectItem
+                  value="parking"
+                  className="rounded-none font-semibold text-slate-700 focus:bg-primary focus:text-white"
+                >
+                  Parking
+                </SelectItem>
+                <SelectItem
+                  value="gym"
+                  className="rounded-none font-semibold text-slate-700 focus:bg-primary focus:text-white"
+                >
+                  Gym
+                </SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Submit Action Button */}
+          <div className="col-span-2 md:col-span-5 lg:col-span-1 pt-2 lg:pt-0 flex gap-2">
+            <Button
+              type="submit"
+              className="flex-1 h-12 flex items-center justify-center rounded-none bg-accent font-bold text-white shadow-md transition-all hover:bg-accent/90 hover:scale-[1.01] active:scale-[0.99] cursor-pointer"
+            >
+              Search
+            </Button>
+            <Button
+              type="button"
+              onClick={handleReset}
+              className="h-12 px-4 flex items-center justify-center rounded-none bg-white border-2 border-slate-300 font-bold text-slate-700 shadow-sm transition-all hover:bg-slate-50 hover:border-slate-400 hover:scale-[1.01] active:scale-[0.99] cursor-pointer"
+            >
+              Reset
+            </Button>
+          </div>
+        </form>
+      </div>
+    </div>
+  )
+}
