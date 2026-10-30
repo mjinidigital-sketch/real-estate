@@ -20,9 +20,9 @@ export interface FilterState {
   amenity: string
 }
 
-export const HeroSearchFilter: React.FC<{
-  onFilterChange?: (filters: FilterState) => void
-}> = ({ onFilterChange }) => {
+export const HeroSearchFilter: React.FC<{ onFilterChange?: (filters: FilterState) => void }> = ({
+  onFilterChange,
+}) => {
   const router = useRouter()
   const [filters, setFilters] = useState<FilterState>({
     keyword: '',
@@ -81,9 +81,9 @@ export const HeroSearchFilter: React.FC<{
   }
 
   return (
-    <div className="relative w-full">
+    <div className=" relative w-full bg-primary p">
       {/* Outer Card Wrapper - Kept clean and elegant with subtle light border */}
-      <div className="mx-auto max-w-6xl rounded-none border border-slate-300 bg-white p-4 shadow-xl md:p-5">
+      <div className="container mx-auto max-w-7xl rounded-none border border-slate-300 bg-card p-4 shadow-xl md:p-5">
         <form
           onSubmit={handleSubmit}
           className="grid grid-cols-2 gap-x-4 gap-y-3 md:grid-cols-5 lg:grid-cols-6 items-center"
@@ -101,7 +101,7 @@ export const HeroSearchFilter: React.FC<{
                 }
               }}
               placeholder="Enter keywords"
-              className="w-full bg-transparent border-b border-transparent hover:border-primary focus-visible:border-primary text-sm font-semibold text-primary placeholder:text-slate-400 focus-visible:ring-0 focus-visible:ring-offset-0 h-10 px-0 rounded-none shadow-none transition-colors duration-150"
+              className="w-full bg-transparent border-b border-transparent hover:border-primary focus-visible:border-primary text-sm font-semibold focus-visible:ring-0 focus-visible:ring-offset-0 h-10 px-0 rounded-none shadow-none transition-colors duration-150"
             />
           </div>
 
@@ -111,26 +111,17 @@ export const HeroSearchFilter: React.FC<{
               value={filters.dealType || 'all'}
               onValueChange={(val) => handleSelectChange('dealType', val)}
             >
-              <SelectTrigger className="w-full bg-transparent border-none text-sm font-bold text-slate-700 hover:text-primary data-[state=open]:text-primary focus:ring-0 focus:ring-offset-0 h-10 px-1 rounded-none shadow-none [&>svg]:text-slate-400 [&>svg]:data-[state=open]:text-primary transition-colors duration-150">
+              <SelectTrigger className="w-full bg-transparent border-none text-sm font-bold focus:ring-0 focus:ring-offset-0 h-10 px-1 rounded-none shadow-none transition-colors duration-150">
                 <SelectValue placeholder="Sell or Rent" />
               </SelectTrigger>
               <SelectContent className="rounded-none border border-slate-200">
-                <SelectItem
-                  value="all"
-                  className="rounded-none font-semibold text-slate-700 focus:bg-primary focus:text-white"
-                >
+                <SelectItem value="all" className="rounded-none font-semibold focus:bg-accent">
                   Sell or Rent
                 </SelectItem>
-                <SelectItem
-                  value="sell"
-                  className="rounded-none font-semibold text-slate-700 focus:bg-primary focus:text-white"
-                >
+                <SelectItem value="sell" className="rounded-none font-semibold focus:bg-accent">
                   For Sale
                 </SelectItem>
-                <SelectItem
-                  value="rent"
-                  className="rounded-none font-semibold text-slate-700 focus:bg-primary focus:text-white"
-                >
+                <SelectItem value="rent" className="rounded-none font-semibold focus:bg-accent">
                   To Rent
                 </SelectItem>
               </SelectContent>
@@ -143,38 +134,26 @@ export const HeroSearchFilter: React.FC<{
               value={filters.propertyType || 'all'}
               onValueChange={(val) => handleSelectChange('propertyType', val)}
             >
-              <SelectTrigger className="w-full bg-transparent border-none text-sm font-bold text-slate-700 hover:text-primary data-[state=open]:text-primary focus:ring-0 focus:ring-offset-0 h-10 px-1 rounded-none shadow-none [&>svg]:text-slate-400 [&>svg]:data-[state=open]:text-primary transition-colors duration-150">
+              <SelectTrigger className="w-full bg-transparent border-none text-sm font-bold focus:ring-0 focus:ring-offset-0 h-10 px-1 rounded-none shadow-none transition-colors duration-150">
                 <SelectValue placeholder="Property Type" />
               </SelectTrigger>
               <SelectContent className="rounded-none border border-slate-200">
-                <SelectItem
-                  value="all"
-                  className="rounded-none font-semibold text-slate-700 focus:bg-primary focus:text-white"
-                >
+                <SelectItem value="all" className="rounded-none font-semibold focus:bg-accent">
                   Property Type
                 </SelectItem>
                 <SelectItem
                   value="apartment"
-                  className="rounded-none font-semibold text-slate-700 focus:bg-primary focus:text-white"
+                  className="rounded-none font-semibold focus:bg-accent"
                 >
                   Apartment
                 </SelectItem>
-                <SelectItem
-                  value="townhome"
-                  className="rounded-none font-semibold text-slate-700 focus:bg-primary focus:text-white"
-                >
+                <SelectItem value="townhome" className="rounded-none font-semibold focus:bg-accent">
                   Townhome
                 </SelectItem>
-                <SelectItem
-                  value="bungalow"
-                  className="rounded-none font-semibold text-slate-700 focus:bg-primary focus:text-white"
-                >
+                <SelectItem value="bungalow" className="rounded-none font-semibold focus:bg-accent">
                   Bungalow
                 </SelectItem>
-                <SelectItem
-                  value="villa"
-                  className="rounded-none font-semibold text-slate-700 focus:bg-primary focus:text-white"
-                >
+                <SelectItem value="villa" className="rounded-none font-semibold focus:bg-accent">
                   Luxury Villa
                 </SelectItem>
               </SelectContent>
@@ -187,38 +166,23 @@ export const HeroSearchFilter: React.FC<{
               value={filters.location || 'all'}
               onValueChange={(val) => handleSelectChange('location', val)}
             >
-              <SelectTrigger className="w-full bg-transparent border-none text-sm font-bold text-slate-700 hover:text-accent data-[state=open]:text-accent focus:ring-0 focus:ring-offset-0 h-10 px-1 rounded-none shadow-none [&>svg]:text-slate-400 [&>svg]:data-[state=open]:text-accent transition-colors duration-150">
+              <SelectTrigger className="w-full bg-transparent border-none text-sm font-bold focus:ring-0 focus:ring-offset-0 h-10 px-1 rounded-none shadow-none transition-colors duration-150">
                 <SelectValue placeholder="Location" />
               </SelectTrigger>
               <SelectContent className="rounded-none border border-slate-200">
-                <SelectItem
-                  value="all"
-                  className="rounded-none font-semibold text-slate-700 focus:bg-accent focus:text-white"
-                >
+                <SelectItem value="all" className="rounded-none font-semibold focus:bg-accent">
                   Location
                 </SelectItem>
-                <SelectItem
-                  value="nairobi"
-                  className="rounded-none font-semibold text-slate-700 focus:bg-accent focus:text-white"
-                >
+                <SelectItem value="nairobi" className="rounded-none font-semibold focus:bg-accent">
                   Nairobi
                 </SelectItem>
-                <SelectItem
-                  value="mombasa"
-                  className="rounded-none font-semibold text-slate-700 focus:bg-accent focus:text-white"
-                >
+                <SelectItem value="mombasa" className="rounded-none font-semibold focus:bg-accent">
                   Mombasa
                 </SelectItem>
-                <SelectItem
-                  value="kisumu"
-                  className="rounded-none font-semibold text-slate-700 focus:bg-accent focus:text-white"
-                >
+                <SelectItem value="kisumu" className="rounded-none font-semibold focus:bg-accent">
                   Kisumu
                 </SelectItem>
-                <SelectItem
-                  value="nakuru"
-                  className="rounded-none font-semibold text-slate-700 focus:bg-accent focus:text-white"
-                >
+                <SelectItem value="nakuru" className="rounded-none font-semibold focus:bg-accent">
                   Nakuru
                 </SelectItem>
               </SelectContent>
@@ -231,38 +195,23 @@ export const HeroSearchFilter: React.FC<{
               value={filters.amenity || 'all'}
               onValueChange={(val) => handleSelectChange('amenity', val)}
             >
-              <SelectTrigger className="w-full bg-transparent border-none text-sm font-bold text-slate-700 hover:text-primary data-[state=open]:text-primary focus:ring-0 focus:ring-offset-0 h-10 px-1 rounded-none shadow-none [&>svg]:text-slate-400 [&>svg]:data-[state=open]:text-primary transition-colors duration-150">
+              <SelectTrigger className="w-full bg-transparent border-none text-sm font-bold focus:ring-0 focus:ring-offset-0 h-10 px-1 rounded-none shadow-none transition-colors duration-150">
                 <SelectValue placeholder="Amenities" />
               </SelectTrigger>
               <SelectContent className="rounded-none border border-slate-200">
-                <SelectItem
-                  value="all"
-                  className="rounded-none font-semibold text-slate-700 focus:bg-primary focus:text-white"
-                >
+                <SelectItem value="all" className="rounded-none font-semibold focus:bg-accent">
                   Amenities
                 </SelectItem>
-                <SelectItem
-                  value="pool"
-                  className="rounded-none font-semibold text-slate-700 focus:bg-primary focus:text-white"
-                >
+                <SelectItem value="pool" className="rounded-none font-semibold focus:bg-accent">
                   Pool
                 </SelectItem>
-                <SelectItem
-                  value="garden"
-                  className="rounded-none font-semibold text-slate-700 focus:bg-primary focus:text-white"
-                >
+                <SelectItem value="garden" className="rounded-none font-semibold focus:bg-accent">
                   Garden
                 </SelectItem>
-                <SelectItem
-                  value="parking"
-                  className="rounded-none font-semibold text-slate-700 focus:bg-primary focus:text-white"
-                >
+                <SelectItem value="parking" className="rounded-none font-semibold focus:bg-accent">
                   Parking
                 </SelectItem>
-                <SelectItem
-                  value="gym"
-                  className="rounded-none font-semibold text-slate-700 focus:bg-primary focus:text-white"
-                >
+                <SelectItem value="gym" className="rounded-none font-semibold focus:bg-accent">
                   Gym
                 </SelectItem>
               </SelectContent>
@@ -273,14 +222,15 @@ export const HeroSearchFilter: React.FC<{
           <div className="col-span-2 md:col-span-5 lg:col-span-1 pt-2 lg:pt-0 flex gap-2">
             <Button
               type="submit"
-              className="flex-1 h-12 flex items-center justify-center rounded-none bg-accent font-bold text-white shadow-md transition-all hover:bg-accent/90 hover:scale-[1.01] active:scale-[0.99] cursor-pointer"
+              className="flex-1 h-12 flex items-center justify-center rounded-none bg-accent font-bold shadow-md transition-all hover:bg-accent/90 hover:scale-[1.01] active:scale-[0.99] cursor-pointer"
             >
               Search
             </Button>
             <Button
               type="button"
+              variant="outline"
               onClick={handleReset}
-              className="h-12 px-4 flex items-center justify-center rounded-none bg-white border-2 border-slate-300 font-bold text-slate-700 shadow-sm transition-all hover:bg-slate-50 hover:border-slate-400 hover:scale-[1.01] active:scale-[0.99] cursor-pointer"
+              className="h-12 px-4 flex items-center justify-center rounded-none border-2 border-slate-300 font-bold shadow-sm transition-all cursor-pointer"
             >
               Reset
             </Button>
