@@ -11,6 +11,7 @@ import './globals.css'
 import { getServerSideURL } from '@/utilities/getURL'
 import { Header } from '@/Header/Component'
 import { Footer } from '@/Footer/Component'
+import { Providers } from '@/providers'
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -20,11 +21,13 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <link href="/favicon.ico" rel="icon" sizes="32x32" />
         <link href="/favicon.svg" rel="icon" type="image/svg+xml" />
       </head>
-      <body>
-        <Header />
-        {children}
-        <Footer />
-      </body>
+      <Providers>
+        <body>
+          <Header />
+          {children}
+          <Footer />
+        </body>
+      </Providers>
     </html>
   )
 }
