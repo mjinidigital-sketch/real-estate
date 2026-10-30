@@ -96,8 +96,8 @@ export const HighImpactHero: React.FC<Page['hero']> = ({ links, media, richText 
                   className={cn(
                     'h-12 px-8 text-sm font-semibold rounded-none w-full sm:w-auto flex justify-center items-center',
                     isFirst
-                      ? 'bg-accent text-white shadow-md hover:bg-accent/90'
-                      : 'border border-white/40 bg-white/10 text-white backdrop-blur-sm hover:bg-white/20',
+                      ? 'bg-accent text-white shadow-md hover:bg-accent/80'
+                      : 'dark:bg-primary-foreground text-white bg-primary shadow-md hover:bg-primary/80',
                   )}
                 />
               )
@@ -113,8 +113,8 @@ export const HighImpactHero: React.FC<Page['hero']> = ({ links, media, richText 
             </Button>
             <Button
               asChild
-              variant="secondary"
-              className="h-12 rounded-none border border-white/40 bg-white/10 px-8 text-sm font-semibold text-white backdrop-blur-sm transition-all hover:bg-white/20 w-full sm:w-auto"
+              variant="primary"
+              className="h-12 rounded-none px-8 text-sm font-semibold text-white transition-all hover:bg-white/20 w-full sm:w-auto"
             >
               <Link href="/contact">Contact Now</Link>
             </Button>
@@ -124,7 +124,7 @@ export const HighImpactHero: React.FC<Page['hero']> = ({ links, media, richText 
 
       {/* --- FLOATING SEARCH FILTER BAR --- */}
       {/* Absolute positioning cleanly adapts across mobile and multi-column monitor widths */}
-      <div className="absolute bottom-30 left-0 right-0 z-20 translate-y-1/2 px-4 sm:px-6 md:px-12">
+      <div className="absolute bottom-40 left-0 right-0 z-20 translate-y-1/2 px-4 sm:px-6 md:px-12 ">
         <div className="mx-auto max-w-6xl">
           <HeroSearchFilter />
         </div>

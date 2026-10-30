@@ -12,6 +12,7 @@ import { getServerSideURL } from '@/utilities/getURL'
 import { Header } from '@/Header/Component'
 import { Footer } from '@/Footer/Component'
 import { Providers } from '@/providers'
+import Topbar from '@/components/Topbar'
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -23,6 +24,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       </head>
       <Providers>
         <body>
+          <Topbar />
           <Header />
           {children}
           <Footer />

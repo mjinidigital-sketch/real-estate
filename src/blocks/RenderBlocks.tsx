@@ -10,6 +10,7 @@ import { MediaBlock } from '@/blocks/MediaBlock/Component'
 import { PropertiesCardBlock } from '@/blocks/PropertiesCardBlock/Component'
 import { AllPropertiesBlock } from '@/blocks/AllPropertiesBlock/Component'
 import { FeaturedPropertiesBlock } from '@/blocks/FeaturedPropertiesBlock/Component'
+import { FeatureCardsBlock } from '@/blocks/FeatureCards/Component'
 import { FeatureImageLeftBlock } from '@/blocks/FeatureImageLeftBlock/Component'
 
 const blockComponents = {
@@ -17,6 +18,7 @@ const blockComponents = {
   archive: ArchiveBlock,
   content: ContentBlock,
   cta: CallToActionBlock,
+  featureCards: FeatureCardsBlock,
   featuredPropertiesBlock: FeaturedPropertiesBlock,
   'feature-image-left': FeatureImageLeftBlock,
   formBlock: FormBlock,
@@ -43,8 +45,8 @@ export const RenderBlocks: React.FC<{
             if (Block) {
               return (
                 <div className={`site-block site-block--${blockType} my-16`} key={index}>
-                  {/* @ts-expect-error there may be some mismatch between the expected types here */}
-                  <Block {...block} disableInnerContainer />
+                  {/* @ts-expect-error - block types vary, some accept disableInnerContainer */}
+                  <Block {...block} />
                 </div>
               )
             }

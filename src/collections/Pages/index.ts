@@ -7,6 +7,7 @@ import { AllProperties } from '../../blocks/AllPropertiesBlock/config'
 import { CallToAction } from '../../blocks/CallToAction/config'
 import { Content } from '../../blocks/Content/config'
 import { FeaturedProperties } from '../../blocks/FeaturedPropertiesBlock/config'
+import { FeatureCards } from '../../blocks/FeatureCards/config'
 import { FeatureImageLeft } from '../../blocks/FeatureImageLeftBlock/config'
 import { FormBlock } from '../../blocks/Form/config'
 import { MediaBlock } from '../../blocks/MediaBlock/config'
@@ -85,7 +86,7 @@ export const Pages: CollectionConfig = {
             {
               name: 'layout',
               type: 'blocks',
-              blocks: [CallToAction, Content, MediaBlock, Archive, FormBlock, PropertiesCard, AllProperties, FeaturedProperties, FeatureImageLeft],
+              blocks: [CallToAction, Content, MediaBlock, Archive, FormBlock, PropertiesCard, AllProperties, FeaturedProperties, FeatureCards, FeatureImageLeft],
               required: true,
               admin: {
                 initCollapsed: true,

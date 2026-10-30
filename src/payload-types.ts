@@ -97,6 +97,20 @@ export type LexicalNodes_AD327369 =
   | SerializedLinkNode<LexicalNodes_AD327369, LexicalLinkFields>;
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "LexicalNodes_B38789BA".
+ */
+export type LexicalNodes_B38789BA =
+  | SerializedTextNode
+  | SerializedTabNode
+  | SerializedLineBreakNode
+  | SerializedParagraphNode<LexicalNodes_B38789BA>
+  | SerializedHorizontalRuleNode
+  | SerializedBlockNode<BannerBlock | CodeBlock | FeatureCardsBlock_EC2E062B | MediaBlock_D6C44817>
+  | SerializedHeadingNode<LexicalNodes_B38789BA, 'h1' | 'h2' | 'h3' | 'h4'>
+  | SerializedAutoLinkNode<LexicalNodes_B38789BA, LexicalLinkFields>
+  | SerializedLinkNode<LexicalNodes_B38789BA, LexicalLinkFields>;
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "LexicalNodes_140BC292".
  */
 export type LexicalNodes_140BC292 =
@@ -336,6 +350,7 @@ export interface Page {
     | PropertiesCardBlock
     | AllPropertiesBlock
     | FeaturedPropertiesBlock
+    | FeatureCardsBlock
     | FeatureImageLeftBlock
   )[];
   meta?: {
@@ -371,7 +386,7 @@ export interface Post {
    */
   title: string;
   heroImage?: (number | null) | Media;
-  content: LexicalRichText<LexicalNodes_140BC292>;
+  content: LexicalRichText<LexicalNodes_B38789BA>;
   relatedPosts?: (number | Post)[] | null;
   categories?: (number | Category)[] | null;
   meta?: {
@@ -1081,6 +1096,52 @@ export interface FeaturedPropertiesBlock {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "FeatureCardsBlock".
+ */
+export interface FeatureCardsBlock {
+  eyebrow?: string | null;
+  heading: string;
+  description?: string | null;
+  alignment?: ('center' | 'left') | null;
+  columns?: ('2' | '3' | '4') | null;
+  enable3D?: boolean | null;
+  /**
+   * Add, edit and reorder your featured cards.
+   */
+  features?:
+    | {
+        title: string;
+        icon:
+          | 'fingerprint'
+          | 'shield'
+          | 'globe'
+          | 'layers'
+          | 'refresh'
+          | 'gauge'
+          | 'lock'
+          | 'laptop'
+          | 'home'
+          | 'building'
+          | 'key'
+          | 'map-pin'
+          | 'users'
+          | 'star'
+          | 'check-circle'
+          | 'award'
+          | 'briefcase'
+          | 'chart';
+        description: string;
+        color?: ('blue' | 'purple' | 'green' | 'orange' | 'pink' | 'cyan' | 'amber' | 'navy') | null;
+        id?: string | null;
+      }[]
+    | null;
+  spacing?: ('compact' | 'default' | 'spacious') | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'featureCards';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "FeatureImageLeftBlock".
  */
 export interface FeatureImageLeftBlock {
@@ -1511,6 +1572,7 @@ export interface PagesSelect<T extends boolean = true> {
         propertiesCardBlock?: T | PropertiesCardBlockSelect<T>;
         allPropertiesBlock?: T | AllPropertiesBlockSelect<T>;
         featuredPropertiesBlock?: T | FeaturedPropertiesBlockSelect<T>;
+        featureCards?: T | FeatureCardsBlockSelect<T>;
         'feature-image-left'?: T | FeatureImageLeftBlockSelect<T>;
       };
   meta?:
@@ -1664,6 +1726,30 @@ export interface FeaturedPropertiesBlockSelect<T extends boolean = true> {
   layout?: T;
   limit?: T;
   autoPlay?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "FeatureCardsBlock_select".
+ */
+export interface FeatureCardsBlockSelect<T extends boolean = true> {
+  eyebrow?: T;
+  heading?: T;
+  description?: T;
+  alignment?: T;
+  columns?: T;
+  enable3D?: T;
+  features?:
+    | T
+    | {
+        title?: T;
+        icon?: T;
+        description?: T;
+        color?: T;
+        id?: T;
+      };
+  spacing?: T;
   id?: T;
   blockName?: T;
 }
@@ -2649,6 +2735,54 @@ export interface CodeBlock {
   blockType: 'code';
   language?: ('typescript' | 'javascript' | 'css') | null;
   code: string;
+  blockName?: string | null;
+}
+/**
+ * Multiple blocks resolve to the `FeatureCardsBlock` interface with different fields, so a content hash is appended to keep the generated types stable and unambiguous. Set a unique `interfaceName` on the block to choose the name yourself. See https://payloadcms.com/docs/typescript/generating-types#block-interface-name-collisions
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "FeatureCardsBlock_EC2E062B".
+ */
+export interface FeatureCardsBlock_EC2E062B {
+  id: string;
+  blockType: 'featureCards';
+  eyebrow?: string | null;
+  heading: string;
+  description?: string | null;
+  alignment?: ('center' | 'left') | null;
+  columns?: ('2' | '3' | '4') | null;
+  enable3D?: boolean | null;
+  /**
+   * Add, edit and reorder your featured cards.
+   */
+  features?:
+    | {
+        title: string;
+        icon:
+          | 'fingerprint'
+          | 'shield'
+          | 'globe'
+          | 'layers'
+          | 'refresh'
+          | 'gauge'
+          | 'lock'
+          | 'laptop'
+          | 'home'
+          | 'building'
+          | 'key'
+          | 'map-pin'
+          | 'users'
+          | 'star'
+          | 'check-circle'
+          | 'award'
+          | 'briefcase'
+          | 'chart';
+        description: string;
+        color?: ('blue' | 'purple' | 'green' | 'orange' | 'pink' | 'cyan' | 'amber' | 'navy') | null;
+        id?: string | null;
+      }[]
+    | null;
+  spacing?: ('compact' | 'default' | 'spacious') | null;
   blockName?: string | null;
 }
 /**
