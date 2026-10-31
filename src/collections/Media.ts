@@ -41,12 +41,49 @@ export const Media: CollectionConfig = {
     },
   ],
   upload: {
-    // Use local storage in development, disable in production (when BLOB_READ_WRITE_TOKEN is set)
-    staticDir: process.env.BLOB_READ_WRITE_TOKEN ? undefined : path.resolve(dirname, '../../public/media'),
+    // Always use local storage - admin panel serves from here
+    // In production, we'll sync to Vercel Blob via afterChange hook
+    staticDir: path.resolve(dirname, '../../public/media'),
     adminThumbnail: 'thumbnail',
     filesRequiredOnCreate: false,
   },
   hooks: {
+    afterChange: [
+      async ({ doc, req }) => {
+        // In production with BLOB_READ_WRITE_TOKEN, sync to Vercel Blob
+        if (process.env.BLOB_READ_WRITE_TOKEN && doc.url && !doc.url.startsWith('https://')) {
+          try {
+            const fs = await import('fs')
+            const { put } = await import('@vercel/blob')
+
+            // Get the local file path
+            const localPath = path.resolve(dirname, '../../public', doc.url)
+
+            // Check if file exists locally
+            if (fs.existsSync(localPath)) {
+              const fileBuffer = fs.readFileSync(localPath)
+
+              // Upload to Vercel Blob
+              const blob = await put(doc.filename || path.basename(doc.url), fileBuffer, {
+                access: 'public',
+                token: process.env.BLOB_READ_WRITE_TOKEN,
+              })
+
+              // Update the document's URL to point to Vercel Blob
+              await req.payload.update({
+                collection: 'media',
+                id: doc.id,
+                data: {
+                  url: blob.url,
+                },
+              })
+            }
+          } catch (error: unknown) {
+            console.error('Error syncing to Vercel Blob:', error)
+          }
+        }
+      },
+    ],
     beforeDelete: [
       async ({ req, id }) => {
         // Delete from Vercel Blob when media is deleted
