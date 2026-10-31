@@ -41,8 +41,8 @@ export const Media: CollectionConfig = {
     },
   ],
   upload: {
-    // Use local storage
-    staticDir: path.resolve(dirname, '../../public/media'),
+    // Use local storage in development, disable in production (when BLOB_READ_WRITE_TOKEN is set)
+    staticDir: process.env.BLOB_READ_WRITE_TOKEN ? undefined : path.resolve(dirname, '../../public/media'),
     adminThumbnail: 'thumbnail',
     filesRequiredOnCreate: false,
   },
