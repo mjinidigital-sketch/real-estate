@@ -10,7 +10,7 @@ import { mergeOpenGraph } from '@/utilities/mergeOpenGraph'
 import './globals.css'
 import { getServerSideURL } from '@/utilities/getURL'
 import { Header } from '@/Header/Component'
-import { Footer } from '@/Footer/Component'
+import FooterSubscribe from '@/components/Footer1'
 import { Providers } from '@/providers'
 import Topbar from '@/components/Topbar'
 
@@ -27,7 +27,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           <Topbar />
           <Header />
           {children}
-          <Footer />
+          <FooterSubscribe />
         </body>
       </Providers>
     </html>
